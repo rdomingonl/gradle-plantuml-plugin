@@ -1,6 +1,11 @@
 package com.cosminpolifronie.gradle.plantuml.tasks
 
-import com.cosminpolifronie.gradle.plantuml.*
+import com.cosminpolifronie.gradle.plantuml.PlantUmlException
+import com.cosminpolifronie.gradle.plantuml.PlantUmlPreparedRender
+import com.cosminpolifronie.gradle.plantuml.PlantUmlReceivedRender
+import com.cosminpolifronie.gradle.plantuml.PlantUmlRenderer
+import com.cosminpolifronie.gradle.plantuml.PlantUmlRendererParameters
+import com.cosminpolifronie.gradle.plantuml.PlantUmlUtils
 import org.gradle.api.Action
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
@@ -12,8 +17,6 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.work.ChangeType
 import org.gradle.work.Incremental
 import org.gradle.work.InputChanges
-import org.gradle.workers.IsolationMode
-import org.gradle.workers.WorkerConfiguration
 import org.gradle.workers.WorkerExecutor
 
 import javax.inject.Inject
@@ -73,11 +76,10 @@ abstract class PlantUmlTask extends DefaultTask {
                 if (localInputPreparedRenderMap.containsKey(change.file)) {
                     def preparedRender = localInputPreparedRenderMap[change.file]
                     logger.lifecycle("[PlantUml] Rendering file ${preparedRender.input.toString()} to ${preparedRender.output.toString()}")
-                    localWorkerExecutor.submit(PlantUmlRenderer.class, new Action<WorkerConfiguration>() {
+                    localWorkerExecutor.noIsolation().submit(PlantUmlRenderer.class, new Action<PlantUmlRendererParameters>() {
                         @Override
-                        void execute(WorkerConfiguration workerConfiguration) {
-                            workerConfiguration.setIsolationMode(IsolationMode.NONE)
-                            workerConfiguration.params(preparedRender)
+                        void execute(PlantUmlRendererParameters workerConfiguration) {
+                            workerConfiguration.plantUmlPreparedRender = preparedRender
                         }
                     })
                 } else {

@@ -1,6 +1,6 @@
 plugins {
     id 'java-gradle-plugin'
-    id 'com.gradle.plugin-publish' version '0.10.1'
+    id 'com.gradle.plugin-publish' version '1.2.1'
     id 'groovy'
     id 'maven-publish'
 }
@@ -23,22 +23,19 @@ dependencies {
 }
 
 gradlePlugin {
+    website = 'https://github.com/cosminpolifronie/gradle-plantuml-plugin'
+    vcsUrl = 'https://github.com/cosminpolifronie/gradle-plantuml-plugin'
     plugins {
-        plantUmlPlugin {
+        create("plantUmlPlugin") {
             id = 'com.cosminpolifronie.gradle.plantuml'
             displayName = 'Gradle PlantUML Plugin'
             description = 'A simple plugin to render PlantUML files. ' +
                     'Takes a set of diagram files together with desired output files / formats ' +
                     'and renders them with PlantUML (http://plantuml.com/).'
             implementationClass = 'com.cosminpolifronie.gradle.plantuml.PlantUmlPlugin'
+            tags.set(["plantuml"])
         }
     }
-}
-
-pluginBundle {
-    website = 'https://github.com/cosminpolifronie/gradle-plantuml-plugin'
-    vcsUrl = 'https://github.com/cosminpolifronie/gradle-plantuml-plugin'
-    tags = ['plantuml']
 }
 
 test {
