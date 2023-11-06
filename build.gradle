@@ -15,11 +15,11 @@ repositories {
 }
 
 dependencies {
-    compile 'net.sourceforge.plantuml:plantuml:1.2019.7'
+    implementation 'net.sourceforge.plantuml:plantuml:1.2019.7'
 
-    testCompile 'org.junit.jupiter:junit-jupiter-api:5.4.2'
-    testCompile 'org.junit-pioneer:junit-pioneer:0.3.0'
-    testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.4.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.2'
+    testImplementation 'org.junit-pioneer:junit-pioneer:0.3.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.4.2'
 }
 
 gradlePlugin {

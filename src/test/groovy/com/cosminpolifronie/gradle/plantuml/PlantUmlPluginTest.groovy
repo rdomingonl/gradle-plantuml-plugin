@@ -317,7 +317,10 @@ class PlantUmlPluginTest {
 
         def result = plantUmlIOTaskExecution().build()
         assert result.task(':plantUmlIO').outcome == SUCCESS
-        assert result.output.contentEquals('diagrams/first.puml,output/sub/first.png\r\ndiagrams/second.puml,output/sub/second.png\r\n')
+        def outputList = result.output.split('\n')
+        assert outputList.size() == 2
+        assert trimNewLine(outputList.getAt(0)).contentEquals('diagrams/first.puml,output/sub/first.png')
+        assert trimNewLine(outputList.getAt(1)).contentEquals('diagrams/second.puml,output/sub/second.png')
     }
 
     @Test
@@ -342,7 +345,7 @@ class PlantUmlPluginTest {
 
         def result = plantUmlOutputForInputTaskExecution("${diagramDir.name}/abc.puml").build()
         assert result.task(':plantUmlOutputForInput').outcome == SUCCESS
-        assert result.output.contentEquals('output/sub/abc.png\r\n')
+        assert trimNewLine(result.output).contentEquals('output/sub/abc.png')
     }
 
     @Test
@@ -367,7 +370,7 @@ class PlantUmlPluginTest {
 
         def result = plantUmlOutputForInputTaskExecution("${diagramDir.name}/first.puml").build()
         assert result.task(':plantUmlOutputForInput').outcome == SUCCESS
-        assert result.output.contentEquals('output/sub/first.png\r\n')
+        assert trimNewLine(result.output).contentEquals('output/sub/first.png')
     }
 
     @Test
@@ -424,5 +427,14 @@ class PlantUmlPluginTest {
         def expectedOutputName = diagramFile.name.replaceAll(/\.[^.]*/, format.fileSuffix)
         def expectedOutput = new File(rootDir, "output/sub/${expectedOutputName}")
         assert expectedOutput.exists(): 'Rendered diagram exists'
+    }
+
+    /**
+     * New line may be '\n' or '\r\n' depending on the OS.
+     * We strip it to get consistent test results
+     * @param text
+     */
+    private String trimNewLine(String text) {
+        return text.replaceAll("[\\n\\r]", "")
     }
 }
